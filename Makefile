@@ -1,4 +1,4 @@
-PACKAGE   = game
+PACKAGE   = redis
 DATE     ?= $(shell date +%FT%T%z)
 VERSION  ?= $(shell git describe --tags --always --dirty --match = v* 2> /dev/null || \
 			cat $(CURDIR)/.version 2> /dev/null || echo v0)
@@ -8,9 +8,6 @@ GODOC     = godoc
 GOFMT     = gofmt
 GOLINT    = gometalinter
 
-API       = api
-CLIENT    = client
-
 FBSDIR    = .
 
 V         = 0
@@ -18,30 +15,7 @@ Q         = $(if $(filter 1,$V),,@)
 M         = $(shell printf "\033[0;35m▶\033[0m")
 
 .PHONY: all
-
-all: api
-
-# Executables
-api:
-	$(info $(M) building executable api…) @ ## Build program binary
-	$Q cd cmd/$(API) &&  $(GO) build \
-		-tags release \
-		-ldflags '-X $(PACKAGE)/cmd.Version=$(VERSION) -X $(PACKAGE)/cmd.BuildDate=$(DATE)' \
-		-o ../../bin/$(PACKAGE)_$(API)_$(VERSION)
-	$Q cp bin/$(PACKAGE)_$(API)_$(VERSION) bin/$(PACKAGE)_$(API)
-
-client:
-	$(info $(M) building executable client…) @ ## Build program binary
-	$Q cd cmd/$(CLIENT) &&  $(GO) build \
-		-tags release \
-		-ldflags '-X $(PACKAGE)/cmd.Version=$(VERSION) -X $(PACKAGE)/cmd.BuildDate=$(DATE)' \
-		-o ../../bin/$(PACKAGE)_$(CLIENT)_$(VERSION)
-	$Q cp bin/$(PACKAGE)_$(CLIENT)_$(VERSION) bin/$(PACKAGE)_$(CLIENT)
-
-.PHONY: gen
-gen:
-	$(info $(M) running gencode…) @
-	$Q cd dto && gencode go -schema=message.schema -package dto
+all: check
 
 # Dependencies
 .PHONY: dep
@@ -69,8 +43,7 @@ lint:
 					"--disable=gocyclo" \
 					"--fast" \
 					"--json" \
-					"./..." \
-			| grep -v schema.gen.go
+					"./..."
 
 .PHONY: fmt
 fmt:
