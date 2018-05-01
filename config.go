@@ -25,27 +25,29 @@ func (c *Config) Dial(fileconf interface{}) error {
 		return errors.New("namespace empty")
 	}
 
-	cVal, ok := fconf["addr"]
+	cAddr, ok := fconf["addr"]
 	if !ok {
 		return errors.New("missing key addr")
 	}
-	if c.Addr, ok = cVal.(string); !ok {
+	if c.Addr, ok = cAddr.(string); !ok {
 		return errors.New("key addr invalid. must be string")
 	}
-	cVal, ok = fconf["password"]
+	cPassword, ok = fconf["password"]
 	if !ok {
 		return errors.New("missing key password")
 	}
-	if c.Password, ok = cVal.(string); !ok {
+	if c.Password, ok = cPassword.(string); !ok {
 		return errors.New("key password invalid. must be string")
 	}
-	cVal, ok = fconf["db"]
+	cDB, ok = fconf["db"]
 	if !ok {
 		return errors.New("missing key db")
 	}
-	if c.DB, ok = cVal.(int); !ok {
+	cDBFloat64, ok = cDB.(float64)
+	if !ok {
 		return errors.New("key db invalid. must be int")
 	}
+	c.DB = int(cDBFloat64)
 
 	return nil
 }
