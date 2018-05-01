@@ -32,18 +32,18 @@ func (c *Config) Dial(fileconf interface{}) error {
 	if c.Addr, ok = cAddr.(string); !ok {
 		return errors.New("key addr invalid. must be string")
 	}
-	cPassword, ok = fconf["password"]
+	cPassword, ok := fconf["password"]
 	if !ok {
 		return errors.New("missing key password")
 	}
 	if c.Password, ok = cPassword.(string); !ok {
 		return errors.New("key password invalid. must be string")
 	}
-	cDB, ok = fconf["db"]
+	cDB, ok := fconf["db"]
 	if !ok {
 		return errors.New("missing key db")
 	}
-	cDBFloat64, ok = cDB.(float64)
+	cDBFloat64, ok := cDB.(float64)
 	if !ok {
 		return errors.New("key db invalid. must be int")
 	}
