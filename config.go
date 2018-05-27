@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Addr     string
 	Password string
+	Output   string
 	DB       int
 }
 
@@ -38,6 +39,13 @@ func (c *Config) Dial(fileconf interface{}) error {
 	}
 	if c.Password, ok = cPassword.(string); !ok {
 		return errors.New("key password invalid. must be string")
+	}
+	cOutput, ok := fconf["output"]
+	if !ok {
+		return errors.New("missing key output")
+	}
+	if c.Output, ok = cOutput.(string); !ok {
+		return errors.New("key output invalid. must be string")
 	}
 	cDB, ok := fconf["db"]
 	if !ok {

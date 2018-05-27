@@ -16,6 +16,12 @@ func (s *Service) Dial(cfg Config) error {
 		Password: cfg.Password,
 		DB:       cfg.DB,
 	})
-	_, err := s.Client.Ping().Result()
-	return err
+	if _, err := s.Client.Ping().Result(); err != nil {
+		return err
+	}
+	if cfg.Output != "" {
+		return s.Client.Process(redis.NewStringCmd("OUTPUT", cfg.Output))
+	}
+
+	return nil
 }
