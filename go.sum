@@ -1,0 +1,4 @@
+github.com/elojah/services v0.0.0-20180906131424-7b238f138836 h1:UmyI8p2MXGksNnGYHvD+H6ljnXl0OegIwfwbE7Ns9Nw=
+github.com/elojah/services v0.0.0-20180906131424-7b238f138836/go.mod h1:8fqqW2L34+kQ7mR6Xzczw170jITRbPTrIw2itp9xFFM=
+github.com/go-redis/redis v6.14.1+incompatible h1:kSJohAREGMr344uMa8PzuIg5OU6ylCbyDkWkkNOfEik=
+github.com/go-redis/redis v6.14.1+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=

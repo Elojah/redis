@@ -1,39 +1,31 @@
-PACKAGE   = redis
-DATE     ?= $(shell date +%FT%T%z)
-VERSION  ?= $(shell git describe --tags --always --dirty --match = v* 2> /dev/null || \
-			cat $(CURDIR)/.version 2> /dev/null || echo v0)
+PACKAGE    = redis
+DATE      ?= $(shell date +%FT%T%z)
+VERSION   ?= $(shell echo $(shell cat $(PWD)/.version)-$(shell git describe --tags --always))
 
-GO        = go
-GODOC     = godoc
-GOFMT     = gofmt
-GOLINT    = gometalinter
+GO         = go1.11
+GODOC      = godoc
+GOFMT      = gofmt
+GOLINT     = gometalinter
 
-FBSDIR    = .
-
-V         = 0
-Q         = $(if $(filter 1,$V),,@)
-M         = $(shell printf "\033[0;35m▶\033[0m")
+V          = 0
+Q          = $(if $(filter 1,$V),,@)
+M          = $(shell printf "\033[0;35m▶\033[0m")
 
 .PHONY: all
 all: check
 
-# Dependencies
-.PHONY: dep
-dep:
-	$(info $(M) building vendor…) @
-	$Q dep ensure
+# Vendor
+.PHONY: vendor
+vendor:
+	$(info $(M) running go mod vendor…) @
+	$Q $(GO) mod vendor
+	$Q modvendor -copy="**/*.c **/*.h" -v
 
 # Check
 .PHONY: check
 check: lint test
 
-# Tests
-.PHONY: test
-test:
-	$(info $(M) running go test…) @
-	$Q $(GO) test -cover -race -v ./...
-
-# Tools
+# Lint
 .PHONY: lint
 lint:
 	$(info $(M) running $(GOLINT)…) @
@@ -45,6 +37,12 @@ lint:
 					"--json" \
 					"./..."
 
+# Test
+.PHONY: test
+test:
+	$(info $(M) running go test…) @
+	$Q $(GO) test -cover -race -v ./...
+
 .PHONY: fmt
 fmt:
 	$(info $(M) running $(GOFMT)…) @
@@ -54,16 +52,6 @@ fmt:
 doc:
 	$(info $(M) running $(GODOC)…) @
 	$Q $(GODOC) ./...
-
-.PHONY: clean
-clean:
-	$(info $(M) cleaning…)	@ ## Cleanup everything
-	@rm -rf bin/$(PACKAGE)_$(API)*
-
-.PHONY: help
-help:
-	@grep -E '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: version
 version:
