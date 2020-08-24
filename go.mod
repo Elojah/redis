@@ -1,8 +1,9 @@
 module github.com/elojah/redis
 
+go 1.13
+
 require (
-	github.com/elojah/services v0.0.0-20180906131424-7b238f138836
-	github.com/go-redis/redis v6.14.1+incompatible
-	github.com/onsi/ginkgo v1.8.0 // indirect
-	github.com/onsi/gomega v1.5.0 // indirect
+	github.com/elojah/services v0.0.0-20200824121030-c650edbc6b3e
+	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/onsi/ginkgo v1.14.0 // indirect
 )

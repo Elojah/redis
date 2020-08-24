@@ -17,5 +17,6 @@ func (s *Service) Dial(cfg Config) error {
 		DB:       cfg.DB,
 	})
 	_, err := s.Client.Ping().Result()
+
 	return err
 }

@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"errors"
+	"github.com/elojah/services"
 )
 
 // Config is redis structure config.
@@ -22,31 +22,49 @@ func (c Config) Equal(rhs Config) bool {
 func (c *Config) Dial(fileconf interface{}) error {
 	fconf, ok := fileconf.(map[string]interface{})
 	if !ok {
-		return errors.New("namespace empty")
+		return services.ErrEmptyNamespace{}
 	}
 
 	cAddr, ok := fconf["addr"]
 	if !ok {
-		return errors.New("missing key addr")
+		return services.ErrMissingKey{Key: "address"}
 	}
+
 	if c.Addr, ok = cAddr.(string); !ok {
-		return errors.New("key addr invalid. must be string")
+		return services.ErrInvalidType{
+			Key:    "address",
+			Expect: "string",
+			Value:  cAddr,
+		}
 	}
+
 	cPassword, ok := fconf["password"]
 	if !ok {
-		return errors.New("missing key password")
+		return services.ErrMissingKey{Key: "password"}
 	}
+
 	if c.Password, ok = cPassword.(string); !ok {
-		return errors.New("key password invalid. must be string")
+		return services.ErrInvalidType{
+			Key:    "password",
+			Expect: "string",
+			Value:  cPassword,
+		}
 	}
+
 	cDB, ok := fconf["db"]
 	if !ok {
-		return errors.New("missing key db")
+		return services.ErrMissingKey{Key: "db"}
 	}
+
 	cDBFloat64, ok := cDB.(float64)
 	if !ok {
-		return errors.New("key db invalid. must be int")
+		return services.ErrInvalidType{
+			Key:    "password",
+			Expect: "int",
+			Value:  cDBFloat64,
+		}
 	}
+
 	c.DB = int(cDBFloat64)
 
 	return nil

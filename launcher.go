@@ -39,6 +39,7 @@ func (l *Launcher) Up(configs services.Configs) error {
 		// Add namespace key when returning error with logrus
 		return err
 	}
+
 	return l.s.Dial(sconfig)
 }
 
