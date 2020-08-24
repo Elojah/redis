@@ -1,7 +1,9 @@
 package redis
 
 import (
-	"github.com/go-redis/redis"
+	"context"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // Service embed a connected redis client.
@@ -16,7 +18,7 @@ func (s *Service) Dial(cfg Config) error {
 		Password: cfg.Password,
 		DB:       cfg.DB,
 	})
-	_, err := s.Client.Ping().Result()
+	_, err := s.Client.Ping(context.Background()).Result()
 
 	return err
 }
